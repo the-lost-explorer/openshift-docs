@@ -1,3 +1,1 @@
-# openshift-docs
-Beginners guide to openshift.
 
