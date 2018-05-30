@@ -1,1 +1,93 @@
+# openshift-docs
 
+###### A beginners guide to the openshift CLI.
+
+### Basic Commands:
+1. Startup openshift cluster:
+
+  oc cluster up
+  
+  
+2. Shutdown openshift cluster:
+
+  oc cluster down
+  
+  
+3. Make a new project: (also changes current working project to this project that you will make)
+
+  oc new-project <your-project-name>
+  
+  
+  
+4. Change project:
+
+  oc project <your-project-name>
+ 
+ 
+ 
+5. Show all projects of current user:
+ 
+  oc projects
+ 
+ 
+ 
+6. Login:
+   - As a normal user:
+  
+  oc login -u <your-username> -p <your-password>
+  
+   - As an admin:
+   
+  oc login -u system:admin
+  
+  
+  
+7. Give admin rights to the developer(or any user):
+  
+  oc adm policy  --as system:admin add-cluster-role-to-user cluster-admin developer
+
+
+
+### Deployment (The complete process):
+
+1. Make a docker image out of a project:
+
+- https://deis.com/blog/2015/creating-sharing-first-docker-image/
+
+2. Get tags from various sources and add it to your project:
+  - From current image stream:
+  
+  oc tag openshift/ruby:2.0 yourproject/ruby:tip
+  
+  - From docker hub: 
+  
+  oc tag --source=docker openshift/origin:latest yourproject/ruby:tip
+  
+3. Run the new app: (similar to `docker run` command)
+
+  oc new-app yourproject/ruby:tip
+  
+4. Check status of deployment:
+
+  oc status 
+
+5. Expose the deployed application:
+
+  oc expose service ruby:tip
+  
+### Storage:
+1. Get a list of all Persistant Volumes:
+
+  oc get pv
+  
+- You need to be logged in as admin to run this command.
+
+2. Add a Persistant Volume Claim to a Persistant Volume:
+
+  oc volume deploymentconfigs/docker-registry --add --name=registry-storage -t pvc --claim-name=my_storage_claim --overwrite
+  
+3. Get docker-registry information: 
+
+  $ oc project default
+  $ oc get dc/docker-registry -o json
+  
